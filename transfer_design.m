@@ -63,7 +63,7 @@ m_Fuel = m2 * (exp((Totaldv)*10^3 / (g * Isp)) - 1);
 fprintf('Propellant Mass Outgoing (kg): %.4f\n', m_Fuel);
 
 % Velocity increments for Hohmann transfer Return Leg
-delta_v1r = abs(sqrt((2*muS/a1)-(2*muS/(a1+a3))) - sqrt(muS/a1)); % Calculating deltav for first Hohmann transfer manouver
+delta_v1r = abs(sqrt((2*muS/a3)-(2*muS/(a1+a3))) - sqrt(muS/a3)); % Calculating deltav for first Hohmann transfer manouver
 deltavr_escape = abs(sqrt((2*muL/rL)+(delta_v1r^2)) - sqrt((2*muL/rL)-(muL/a3))); % Calculating deltav for launch body escape
 delta_v2r = abs(sqrt(muS/a1) - sqrt((2*muS/a1) - (2*muS/(a1+a3)))); % Calculating deltav for second Hohmann transfer manouver
 deltavr_capture = abs(sqrt(((2*muT)/rT) + (delta_v2r^2)) - sqrt(((2*muT)/rT)-(muT/a1))); % Calculating deltav for target body capture 
