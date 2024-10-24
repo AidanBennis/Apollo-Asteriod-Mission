@@ -1,18 +1,18 @@
-clc; clear; close all;
+%clc; clear; close all;
 
 %% Constants
 mu = 132712440018; % km^3/s^2
 AU = 149597885.092797; % Astronomical Unit in km
 G = 6.67430e-11; % Gravitational constant [m^3 kg^-1 s^-2]
 
-
 %% Orbital parameters
 % Earth
 a1 = 1 * AU; % Semi-major axis of Earth's orbit in km
 e1 = 0; % Eccentricity of Earth's orbit
 i1 = 0; % Inclination
-r2 = 42157; % Orbit around Earth in Km (6371 [radius] + 35786 [GTO])
-muT = 3.99e+5 ;% gravatational parameter of Earth
+muT = 3.99e+5 ; % gravatational parameter of Earth
+rT = 42157; % Orbit around Earth in Km (6371 [radius] + 35786 [GTO])
+rT1 = 6571; % 200Km LEO Orbit for end of mission
 
 % Asteroid: Apollo
 a3 = 2.2e8; % Semi-major axis of Apollos orbit in km
@@ -21,13 +21,11 @@ i3 = 6.352454347; % Inclination of Apollo orbit in degrees
 Omega3 = 35.55648326; % Right Ascension of Apollo orbit in degrees
 omega3 = 286.0329799; % Argument of periapsis of Apollo orbit in degrees
 M3 = 41.059574; % Mean anomaly of Apollo orbit in degrees
-rL = 5.775; % raduis of intial orbit around launch body (including raduis of body) (km)
-rT = 42157; % raduis of capture orbit around target body (including raduis of body) (km)
-rT1 = 6571; % 200Km LEO Orbit for end of mission
+rL = 5.775; % raduis of intial orbit around Apollo (Km)
 muL = 1.33e-7;% gravatational parameter of Apollo
 
 % Sun
-muS = 1.33e+11; % gravatational parameter of sun
+muS = 1.33e+11; % gravatational parameter of Sun
 
 %% Orbit Definition
 % Orbital velocity for circular orbit
@@ -41,13 +39,14 @@ fprintf('Altitude: %.2f Km\n', rL - 0.775);
 fprintf('Orbital Velocity: %.2f m/s\n', v_orbit);
 fprintf('Orbital Period: %.2f minutes', T / 60);
 fprintf(' (%.2f hours)\n\n', T / 60 / 60);
+
 %% Convert orbital elements position and velocity
 % Cartesian --> elements
 orb = [a3; e3; i3/180*pi; Omega3/180*pi; omega3/180*pi; M3/180*pi];
-rv = E2C(orb, mu); % E2C is a function that converts elements to cartesian
+rv = E2C(orb, mu); % E2C converts elements to cartesian
 
 % elements --> cartesian
-orb_elements = C2E(rv, mu); % C2E is a function that converts cartesian to elements
+orb_elements = C2E(rv, mu); % C2E converts cartesian to elements
 
 %% Hohmann transfer
 % Calculating periapsis and apoapsis for Apollo
@@ -70,12 +69,12 @@ fprintf('Delta v2r (km/s): %.4f\n', delta_v2r);
 fprintf('Delta vr Total (km/s): %.4f\n', Totaldvr);
 
 % Propellant mass 
-Isp = 450; % Specific impulse of the rocket engine in seconds
+Isp = 320; % Specific impulse of the rocket engine in seconds
 g = 9.81; % Standard gravity in m/s^2
 m2 = 2000; % Spacecraft mass - with cargo in Kg
 ve = (Isp*g)/1000; % Exhaust Velocity in Km/s
 mi1 = m2/(exp(-Totaldvr/ve)); % Total Mass of Spacecraft
-mfuel1 = mi1 - m2;
+mfuel1 = mi1 - m2; % Mass of Fuel for Return Leg
 fprintf('Propellant Mass Return (kg): %.4f\n\n', mfuel1);
 
 %% Velocity increments for Hohmann transfer 
