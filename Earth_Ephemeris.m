@@ -42,8 +42,6 @@ p = 2*pi*sqrt(a^3/mu_sun);
 np = floor(t/p);
 t = t-p*np;
 phi = n*t;
-ddf=(e*cos(phi)-1);
-phi=phi-t*n/ddf+(phi-e*sin(phi))/ddf;
 wom=2*atan(sqrt((1+e)/(1-e))*tan(phi*0.5));
 
 kep = [a,e,i,Om,om,wom];
