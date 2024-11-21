@@ -1,5 +1,5 @@
 function [kep] = Earth_Ephemeris(time)
-%Ephemeris of the Apollo Asteriod
+%Ephemeris of the Apollo Asteroid
 % OUTPUT
 %   kep     Keplerian parameters. It is a 6 entry vector:
 %               [a e i Om om wom]
@@ -10,16 +10,11 @@ function [kep] = Earth_Ephemeris(time)
 %               Om is the anomaly of the ascending node [rad];
 %               om is the anomaly of the pericentre [rad];
 %               wom is the true anomaly (from the pericentre) [rad].
-%               time_Mo is the time at which the true anamoly ocurs [MJD]
-%
-%   mass    Mass of the NEO [kg]. It can be read from the database, or, if
-%           not available, estimated by an approximate equation.
-%   M       Mean anomaly at time [rad].
 
 %% MAIN %%
 
-conv_rads = pi/180; % Converets degrees to rads
-mu_sun = 1.33e+11; %km3/s3
+conv_rads = pi/180; % Converts degrees to radians
+mu_sun = 1.33e+11; % Gravitational parameter of the Sun in km^3/s^2
 
     % Base Keplerian Elements of Earth 
     a = 1.496e+8; % Semi-major axis in km (1 AU)
@@ -30,18 +25,37 @@ mu_sun = 1.33e+11; %km3/s3
     Mo = 358.617 * conv_rads; % Mean anomaly at reference time in radians
     time_Mo = 60633; % Reference time (MJD for 2024-Nov-19)
 
+% Mean motion
+n = sqrt(mu_sun / a^3); % [rad/s]
 
-% True Anamoly From NEO Ephemeris does all this to get true Anamoly
-% at the time being simulated in Lambert
-n  = sqrt(mu_sun/a^3);
-t0 = Mo*pi/180/n;
-timediff = time_Mo - 51544.5; % Convert to MJD 2000
-t = (time - timediff)*86400+t0;
+% Calculate time difference in seconds from the reference time
+timediff = (time - time_Mo) * 86400; % Convert time difference to seconds
 
-p = 2*pi*sqrt(a^3/mu_sun);
-np = floor(t/p);
-t = t-p*np;
-phi = n*t;
-wom=2*atan(sqrt((1+e)/(1-e))*tan(phi*0.5));
+% Calculate mean anomaly at the given time
+meanAnomaly = Mo + n * timediff; % Mean anomaly at time [rad]
+meanAnomaly = mod(meanAnomaly, 2 * pi); % Keep mean anomaly within 0 to 2*pi
 
-kep = [a,e,i,Om,om,wom];
+% Calculate eccentric anomaly using iterative method (Kepler's Equation)
+eccAnomaly = meanAnomaly; % Initial guess for eccentric anomaly
+tolerance = 1e-6; % Set tolerance for iterative solution
+maxIter = 100; % Maximum number of iterations
+
+for k = 1:maxIter
+    f = eccAnomaly - e * sin(eccAnomaly) - meanAnomaly;
+    f_prime = 1 - e * cos(eccAnomaly);
+    delta = -f / f_prime;
+    eccAnomaly = eccAnomaly + delta;
+    if abs(delta) < tolerance
+        break;
+    end
+end
+
+% Calculate true anomaly from eccentric anomaly
+trueAnomaly = 2 * atan2(sqrt(1 + e) * sin(eccAnomaly / 2), sqrt(1 - e) * cos(eccAnomaly / 2));
+
+% Update the true anomaly (wom)
+wom = trueAnomaly;
+
+% Return Keplerian elements
+kep = [a, e, i, Om, om, wom];
+end
