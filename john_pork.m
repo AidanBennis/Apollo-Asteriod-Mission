@@ -15,7 +15,7 @@ td_start = jd_start - 2400000.5;  % Convert to Modified Julian Date (MJD)
 td_end = jd_end - 2400000.5;  % Convert to Modified Julian Date (MJD)
 
 % Time of Flight setup
-ToF0 = 101; % Minimum Time of Flight (days)
+ToF0 = 137.95; % Minimum Time of Flight (days) - from Hohmann
 dToF = 730; % Maximum additional Time of Flight in days (2 years max ToF)
 nsteps_i = 2191; % Steps for departure date
 nsteps_j = 730; % Steps for Time of Flight
@@ -37,7 +37,7 @@ for i = 1:nsteps_i
 
         % Keplerian parameters of Earth and Apollo at the current times
         [RE_kep] = Earth_Ephemeris(ti(i));
-        [RA_kep] = Apollo_Ephemeris(tj);
+        [RA_kep] = Arwen_Ephemeris(tj);
 
         % Convert Keplerian parameters to Cartesian coordinates
         [RE, vE] = kep2cart(RE_kep, mu);
@@ -66,6 +66,6 @@ grid on;
 
 %% Date Finder
 % Display corresponding date and time of flight for a specific cell
-i = 1665; % 
-j = 179; % 
+i = 176; % 
+j = 117; % 
 fprintf('For dv(%d, %d): Departure Date = %.2f MJD, Time of Flight = %.2f days\n', i, j, ti(i), ToF(j));
