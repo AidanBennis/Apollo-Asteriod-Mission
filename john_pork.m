@@ -17,8 +17,8 @@ td_end = jd_end - 2400000.5;  % Convert to Modified Julian Date (MJD)
 % Time of Flight setup
 ToF0 = 137.95; % Minimum Time of Flight (days) - from Hohmann
 dToF = 730; % Maximum additional Time of Flight in days (2 years max ToF)
-nsteps_i = 2191; % Steps for departure date
-nsteps_j = 730; % Steps for Time of Flight
+nsteps_i = 100; % Steps for departure date
+nsteps_j = 100; % Steps for Time of Flight
 
 % Initialise Variables
 ti = zeros(1, nsteps_i); % Array for departure dates
