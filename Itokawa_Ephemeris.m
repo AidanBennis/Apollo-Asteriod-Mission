@@ -28,27 +28,24 @@ e = 0.2802554393054337; % Eccentricity
 i = 1.621180377898326 * conv_rads; % Inclination [rad]
 Om = 69.07689978577788 * conv_rads; % Longitude of ascending node [rad]
 om = 162.8201670956601 * conv_rads; % Argument of periapsis [rad]
-Mo = 142.5740657740646 * conv_rads; % Mean anomaly at epoch [rad]
+T = 556.5415504754865 * 86400; %Orbital Period days to Seconds
 
-% True Anomaly Calculation
-n  = (2*pi)/556.5415504754865 * 86400; % Mean motion [rad/s]
-t0 = Mo / n; % Initial mean anomaly time [s]
-
-M = n * (time - t0); % Mean Anomaly at given time [rad]
-
-% Solve Kepler's Equation for Eccentric Anomaly (E)
-E = M; % Initial guess for E
-tolerance = 1e-8; % Convergence tolerance
+t = time;
+M = 2 * pi * (t / T); % Mean anomaly (rad)
+    
+% Solve Kepler's equation: M = E - e*sin(E) iteratively
+E = M; % Initial guess for eccentric anomaly
+tol = 1e-8; % Convergence tolerance
 while true
-    E_next = M + e * sin(E); % Iterative solution
-    if abs(E_next - E) < tolerance
+    dE = (M - (E - e * sin(E))) / (1 - e * cos(E));
+    E = E + dE;
+    if abs(dE) < tol
         break;
     end
-    E = E_next;
 end
 
 % Step 4: Calculate True Anomaly (wom)
-wom = 2 * atan2(sqrt(1 + e) * sin(E_next / 2), sqrt(1 - e) * cos(E_next / 2)); % True anomaly [rad]
+wom = 2 * atan2(sqrt(1 + e) * sin(E / 2), sqrt(1 - e) * cos(E / 2)); % True anomaly [rad]
 
 % Output Keplerian Elements
 kep = [a, e, i, Om, om, wom];

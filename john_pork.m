@@ -37,7 +37,7 @@ for i = 1:nsteps_i
 
         % Keplerian parameters of Earth and Apollo at the current times
         [RE_kep] = Earth_Ephemeris(ti(i));
-        [RA_kep] = Arwen_Ephemeris(tj);
+        [RA_kep] = Itokawa_Ephemeris(tj);
 
         % Convert Keplerian parameters to Cartesian coordinates
         [RE, vE] = kep2cart(RE_kep, mu);
@@ -63,9 +63,3 @@ title('Earth to Asteroid Transfer Pork-Chop Plot');
 colorbar;
 grid on;
 
-
-%% Date Finder
-% Display corresponding date and time of flight for a specific cell
-i = 176; % 
-j = 117; % 
-fprintf('For dv(%d, %d): Departure Date = %.2f MJD, Time of Flight = %.2f days\n', i, j, ti(i), ToF(j));
