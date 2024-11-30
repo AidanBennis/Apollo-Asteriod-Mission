@@ -26,7 +26,7 @@ mu_sun = 1.33e+11; % Gravitational parameter of the Sun in km^3/s^2
     time_Mo = 60633; % Reference time (MJD for 2024-Nov-19)
 
 % Mean motion
-n = sqrt(mu_sun / a^3); % [rad/s]
+n = sqrt(mu_sun/a^3); % [rad/s]
 
 % Calculate time difference in seconds from the reference time
 timediff = (time - time_Mo) * 86400; % Convert time difference to seconds
