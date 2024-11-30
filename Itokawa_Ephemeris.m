@@ -31,7 +31,7 @@ om = 162.8201670956601 * conv_rads; % Argument of periapsis [rad]
 Mo = 142.5740657740646 * conv_rads; % Mean anomaly at epoch [rad]
 
 % True Anomaly Calculation
-n  = (2*pi)/556.5415504754865 * 86400; % Mean motion [rad/s]
+n = sqrt(mu_sun/a^3); % Mean motion [rad/s]
 t0 = Mo / n; % Initial mean anomaly time [s]
 
 M = n * (time - t0); % Mean Anomaly at given time [rad]
@@ -47,7 +47,7 @@ while true
     E = E_next;
 end
 
-% Step 4: Calculate True Anomaly (wom)
+% Calculate True Anomaly (wom)
 wom = 2 * atan2(sqrt(1 + e) * sin(E_next / 2), sqrt(1 - e) * cos(E_next / 2)); % True anomaly [rad]
 
 % Output Keplerian Elements
