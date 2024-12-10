@@ -173,7 +173,7 @@ for i = 1:nsteps_i
         % Calculate arrival date in MJD
         tj = ti(i) + ToF(j);
 
-        % Keplerian parameters of Arwen (asteroid) at the departure time
+        % Keplerian parameters of Itokawa at the departure time
         [RA_kep] = Itokawa_Ephemeris(ti(i)); % Asteroid at departure time
         [RE_kep] = Earth_Ephemeris(tj); % Earth at arrival time
 
